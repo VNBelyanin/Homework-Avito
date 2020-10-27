@@ -1,0 +1,27 @@
+class CountVectorizer:
+
+    """Выдает компоненты вектора слов"""
+    
+    def __init__(self, lowercase = True):
+        self.lowercase = lowercase
+    
+    def fit_transform (self, corpus: list):
+        corpus = corpus
+        self.words = []
+        corpus = [lists.lower().split() for lists in corpus]
+        for lists in corpus:
+            for words in lists:
+                if words not in self.words:
+                    self.words.append(words)
+        vectors = []
+        for i in range(len(corpus)):
+            vectors.append([])
+            for i_word in range(len(self.words)):
+                vectors[i].append(0)
+                for words in corpus[i]:
+                    if self.words[i_word] == words:
+                        vectors[i][i_word] += 1
+        return vectors
+    
+    def get_feature_names (self):
+        return self.words
