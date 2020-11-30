@@ -1,2 +1,41 @@
-#Will be here soon
-#may be
+from keyword import iskeyword
+import json
+
+class ColorizeMixin:
+
+    @classmethod
+    def colorize(cls, colour=None):
+        if colour is not None:
+            cls.repr_color_code = colour
+        assert cls.repr_color_code is not None
+        print(f'\033[0;{cls.repr_color_code};40m', end='')
+
+class Advert(ColorizeMixin):
+    repr_color_code = 32
+
+    def __init__(self, advert_from_json: dict):
+        for key, value in advert_from_json.items():
+            if isinstance(value, dict):
+                setattr(self, key, Advert(value))
+            else:
+                if iskeyword(key):
+                    setattr(self, f'{key}_', value)
+                else:
+                    setattr(self, key, value)
+        if type(advert_from_json) is str:
+            self.advert_from_json = json.loads(advert_from_json)
+        else:
+            self.advert_from_json = advert_from_json
+
+    def __repr__(self):
+        return f'{self.title} | {self.price} Рублей'
+
+    @property
+    def price(self):
+        return getattr(self, '_price', 0)
+
+    @price.setter
+    def price(self, value):
+        if value < 0:
+            raise ValueError()
+        self._price = value
