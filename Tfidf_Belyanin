@@ -1,0 +1,94 @@
+import math as m
+
+class CountVectorizer:
+
+    """Выдает компоненты вектора слов"""
+
+    def __init__(self, lowercase = True):
+        self.lowercase = lowercase
+
+    def fit_transform (self, corpus: list):
+        corpus = corpus
+        self.words = []
+        corpus = [lists.lower().split() for lists in corpus]
+        for lists in corpus:
+            for words in lists:
+                if words not in self.words:
+                    self.words.append(words)
+        vectors = []
+        for i in range(len(corpus)):
+            vectors.append([])
+            for i_word in range(len(self.words)):
+                vectors[i].append(0)
+                for words in corpus[i]:
+                    if self.words[i_word] == words:
+                        vectors[i][i_word] += 1
+        return vectors
+
+    def get_feature_names (self):
+        return self.words
+
+class TfIdfTransformer(): # В названии класса I - заглавная
+
+    """Класс содержит методы, определяющие
+    tf, idf и tfidf векторы"""
+
+    def __init__(self, lowercase = True):
+        self.lowercase = lowercase
+
+    def tf_transform(self, nvectors):
+        tf_matrix = []
+        word_number = 0
+        for vectors in nvectors:
+            len_text = sum(vectors)
+            tf_matrix.append([])
+            for values in vectors:
+                tf_matrix[word_number].append(round((values / len_text), 3))
+            word_number += 1
+        return tf_matrix
+
+    def idf_transform(self, nvectors):
+        len_matrix = len(nvectors)
+        n = len(nvectors[0])
+        n_docs = len(nvectors)
+        answer = [0]*n
+        for i in range(n):
+            count = 0
+            for docs in nvectors:
+                if docs[i] > 0:
+                    count += 1
+            answer[i] = round((m.log((n_docs + 1) / (count + 1)) + 1), 3)
+        return answer
+
+    def fit_tfidf(self, tf, idf):
+        answer = []
+        for words in tf:
+            i = 0
+            tfidf_vector =[]
+            for tf_values in words:
+                tfidf = round((tf_values * idf[i]), 3)
+                tfidf_vector.append(tfidf)
+                i += 1
+            answer.append(tfidf_vector)
+        return answer
+
+    def fit_transform(self, matrix):
+        return self.fit_tfidf(self.tf_transform(matrix), self.idf_transform(matrix))
+
+class TfidfVectorizer(CountVectorizer, TfIdfTransformer):
+
+    def fit_transform(self, corpus):
+        vector = super().fit_transform(corpus)
+        return vector
+
+corpus = [
+'Crock Pot Pasta Never boil pasta again',
+'Pasta Pomodoro Fresh ingredients Parmesan to taste'
+]
+vectorizer = TfidfVectorizer()
+transformer = TfIdfTransformer()
+count_matrix = vectorizer.fit_transform(corpus)
+tfidf_matrix = transformer.fit_transform(count_matrix)
+#print(vectorizer.get_feature_names())
+#print(count_matrix)
+print(tfidf_matrix)
