@@ -1,0 +1,18 @@
+@pytest.mark.parametrize('input_word, exp', [
+    ('ABC', '.- -... -.-.'),
+    ('SOS', '... --- ...'),
+    ('FIX', '..-. .. -..-')
+])
+def test_pytest(input_word, exp):
+    assert encode(input_word) == exp
+
+
+$ python -m pytest pytestHTAvito.py
+=========================================================================== test session starts ============================================================================
+platform darwin -- Python 3.8.5, pytest-6.2.1, py-1.10.0, pluggy-0.13.1
+rootdir: /Users/vasily/Desktop/TestsAvito
+collected 3 items                                                                                                                                                          
+
+pytestHTAvito.py ...                                                                                                                                                 [100%]
+
+============================================================================ 3 passed in 0.01s =============================================================================
