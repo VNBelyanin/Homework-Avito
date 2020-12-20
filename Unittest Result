@@ -1,0 +1,34 @@
+class TestUnittest(unittest.TestCase):
+    def test_2words(self):
+        actual = fit_transform('abc', 'cde')
+        expected = [('abc', [0, 1]), ('cde', [1, 0])]
+
+        self.assertEqual(actual, expected)
+
+    def test_empty(self):
+        actual = fit_transform('')
+        expected = [('', [1])]
+
+        self.assertEqual(actual, expected)
+
+    def test_notin(self):
+        actual = fit_transform('')
+        expected = []
+
+        self.assertNotIn(actual, expected)
+
+    def test_noargs(self):
+        with self.assertRaises(TypeError):
+            actual = fit_transform()
+            expected = []
+            self.assertEqual(actual, expected)
+
+
+if __name__ == '__main__':
+    unittest.main()
+    
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK
